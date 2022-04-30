@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS Prices;
 DROP TABLE IF EXISTS ProductURLs;
+DROP TABLE IF EXISTS Stores;
 DROP TABLE IF EXISTS Products;
 DROP TABLE IF EXISTS Categories;
 
@@ -18,19 +19,23 @@ CREATE TABLE Products (
          ON UPDATE NO ACTION
 );
 
+CREATE TABLE Stores (
+    store_id INTEGER PRIMARY KEY,
+    store TEXT NOT NULL
+);
+
 CREATE TABLE ProductURLs (
     url_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    category_id INTEGER,
     product_id INTEGER,
     url TEXT NOT NULL,
-    store TEXT NOT NULL,
+    store_id INTEGER NOT NULL,
     descr TEXT NOT NULL,
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) 
-      REFERENCES Categories (category_id) 
-         ON DELETE CASCADE 
+    FOREIGN KEY (store_id)
+      REFERENCES Stores (store_id)
+         ON DELETE CASCADE
          ON UPDATE NO ACTION,
-    FOREIGN KEY (product_id) 
+    FOREIGN KEY (product_id)
       REFERENCES Products (product_id) 
          ON DELETE CASCADE 
          ON UPDATE NO ACTION
