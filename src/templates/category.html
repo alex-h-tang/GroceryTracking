@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} For Category: {{catename}} {% endblock %}</h2>
+    <br>
+    {% for prod in products %}
+        <a href="{{ url_for('product', product_id=prod['product_id']) }}">
+            <h2>{{ prod['name'] }}</h2>
+        </a>
+        <hr>
+    {% endfor %}
+{% endblock %}

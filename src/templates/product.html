@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{% block title %} {{product}} <small><em>({{urls|length}} results)</em></small> {% endblock %}</h2>
+    <br>
+    <h3>
+        <a href="{{ url_for('category', category_id=cate_id) }}">{{ category }} </a>
+    </h3>
+    <br>
+    <table style="width:100%">
+        <tr style="background-color:#FF00EC">
+            <th>Store</th><th>Link</th><th>Description</th>
+        </tr>
+        {% for url in urls %}
+            <tr style="text-align:left">
+                <td>{{url['store']}}</td>
+                <td><a href="{{url['url']}}">{{url['url']}}</a></td>
+                <td>{{url['descr']}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

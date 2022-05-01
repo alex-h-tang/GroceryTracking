@@ -1,3 +1,4 @@
+DROP VIEW IF EXISTS vUrlDetails;
 DROP TABLE IF EXISTS Prices;
 DROP TABLE IF EXISTS ProductURLs;
 DROP TABLE IF EXISTS Stores;
@@ -51,3 +52,10 @@ CREATE TABLE Prices (
          ON UPDATE NO ACTION,
     PRIMARY KEY (url_id, price_date)
 );
+
+CREATE VIEW vUrlDetails AS
+    select u.url_id, c.category_name, c.category_id, p.name, p.product_id, s.store, s.store_id, u.url, u.descr
+    from ProductURLs u
+    left join Products p on u.product_id = p.product_id
+    left join Stores s on u.store_id = s.store_id
+    left join Categories c on c.category_id = p.category_id;
