@@ -31,7 +31,7 @@ CREATE TABLE ProductURLs (
     url TEXT NOT NULL,
     store_id INTEGER NOT NULL,
     descr TEXT NOT NULL,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (store_id)
       REFERENCES Stores (store_id)
          ON DELETE CASCADE
@@ -44,13 +44,13 @@ CREATE TABLE ProductURLs (
 
 CREATE TABLE Prices (
     url_id INTEGER,
-    price_date Date DEFAULT CURRENT_DATE,
+    price_dt datetime DEFAULT CURRENT_TIMESTAMP,
     price REAL NOT NULL,
     FOREIGN KEY (url_id) 
       REFERENCES ProductURLs (url_id) 
          ON DELETE CASCADE 
          ON UPDATE NO ACTION,
-    PRIMARY KEY (url_id, price_date)
+    PRIMARY KEY (url_id, price_dt)
 );
 
 CREATE VIEW vUrlDetails AS

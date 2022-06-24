@@ -9,13 +9,17 @@
     <br>
     <table style="width:100%">
         <tr style="background-color:#FF00EC">
-            <th>Store</th><th>Link</th><th>Description</th>
+            <th>Store</th><th>Url Id</th><th>Price</th><th>Description</th>
         </tr>
         {% for url in urls %}
             <tr style="text-align:left">
                 <td>{{url['store']}}</td>
-                <td><a href="{{url['url']}}">{{url['url']}}</a></td>
+                <td><a href="{{url['url']}}">{{url['url_id']}}<a href="{{ url_for('update', url_id=url['url_id'], product_id=url['product_id'])}}">
+                        <span class="badge">Update</span>
+                    </a></a></td>
+                <td>${{prices[url['url_id']]}}</td>
                 <td>{{url['descr']}}</td>
+
             </tr>
         {% endfor %}
     </table>

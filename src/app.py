@@ -22,10 +22,28 @@ def category(category_id):
 def product(product_id):
     urls = get_product_urls(product_id)
     name, cate, cateid = get_product_info(product_id)
-    return render_template('product.html', product=name, category=cate, cate_id=cateid, urls=urls)
+    prices = {}
+    for url in urls:
+        print((url['url_id']))
+        prices[url['url_id']] = get_price(url['url_id'])
+    return render_template('product.html', product=name, category=cate, cate_id=cateid, urls=urls, prices=prices)
+
+@app.route('/update/<int:product_id>/<int:url_id>', methods=('GET', 'POST'))
+def update(url_id, product_id):
+    new_price = -99999999
+    if request.method == 'POST':
+        new_price = request.form['new_price']
+
+        if not new_price:
+            flash("new price is required")
+        else:
+            print(new_price)
+            update_price(url_id, new_price)
+            return redirect(url_for('product', product_id=product_id))
+    return render_template('edit.html')
 
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('database.db', timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -55,7 +73,7 @@ def get_category_name(cate_id):
 
 def get_product_urls(product_id):
     conn = get_db_connection()
-    urls= conn.execute('SELECT * FROM vUrlDetails WHERE product_id = ?', (product_id,)).fetchall()
+    urls = conn.execute('SELECT * FROM vUrlDetails WHERE product_id = ?', (product_id,)).fetchall()
     conn.close()
     if urls is None:
         abort(404)
@@ -70,6 +88,21 @@ def get_product_info(prod_id):
     if name is None or cate is None:
         abort(404)
     return name, cate[0], cate_id
+
+def get_price(url_id):
+    conn = get_db_connection()
+    price = conn.execute('SELECT price FROM Prices WHERE url_id = ? ORDER BY price_dt DESC', (url_id,)).fetchone()
+    if price is None:
+        return -99999999
+    conn.close()
+    return price[0]
+
+def update_price(url_id, price):
+    conn = get_db_connection()
+    conn.execute(f'INSERT INTO Prices (url_id, price) VALUES ({url_id}, {price})')
+    conn.commit()
+    conn.close()
+    return
 
 
 # @app.route('/create', methods=('GET', 'POST'))

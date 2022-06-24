@@ -31,10 +31,22 @@ VALUES (1001, 'https://www.lidl.com/products/1068506', 1, 'vitamin A/D');
 INSERT INTO ProductURLs (product_id, url, store_id, descr)
 VALUES (1001, 'https://www.harristeeter.com/p/harris-teeter-fat-free-skim-milk/0007203663128', 2, 'vitamin A/D');
 INSERT INTO ProductURLs (product_id, url, store_id, descr)
-VALUES (1001, 'https://www.walmart.com/ip/Great-Value-Fat-Free-Milk-Gallon-128-fl-oz/10450117', 3, 'Greate Value, vitamin A/D');
+VALUES (1001, 'https://www.walmart.com/ip/Great-Value-Fat-Free-Milk-Gallon-128-fl-oz/10450117', 3, 'Great Value, vitamin A/D');
 
 -- (2001) Vegetable/Eggs Normal
+INSERT INTO ProductURLs (product_id, url, store_id, descr)
+VALUES (2001, 'https://www.lidl.com/products/1363267', 1, '');
+INSERT INTO ProductURLs (product_id, url, store_id, descr)
+VALUES (2001, 'https://www.harristeeter.com/p/harris-teeter-grade-a-large-eggs/0007203663220', 2, '');
+INSERT INTO ProductURLs (product_id, url, store_id, descr)
+VALUES (2001, 'https://www.walmart.com/ip/Great-Value-Large-White-Eggs-12-Count/145051970', 3, '');
 -- (2002) Vegetable/Eggs Organic
+INSERT INTO ProductURLs (product_id, url, store_id, descr)
+VALUES (2002, 'https://www.lidl.com/products/1363301', 1, '');
+INSERT INTO ProductURLs (product_id, url, store_id, descr)
+VALUES (2002, 'https://www.harristeeter.com/p/simple-truth-organic-cage-free-large-brown-eggs/0001111079772', 2, '');
+INSERT INTO ProductURLs (product_id, url, store_id, descr)
+VALUES (2002, 'https://www.walmart.com/ip/Marketside-Organic-Cage-Free-Brown-Eggs-Large-12-Count/48319448', 3, '');
 
 -- (3001) Fruit/Banana Normal
 -- (3002) Fruit/Banana Organic
@@ -54,3 +66,24 @@ INSERT INTO ProductURLs (product_id, url, store_id, descr)
 VALUES (4002, 'https://www.harristeeter.com/p/mini-cucumbers/0073447533423', 2, '');
 INSERT INTO ProductURLs (product_id, url, store_id, descr)
 VALUES (4002, 'https://www.walmart.com/ip/Fresh-Mini-Cucumber-1lb-bag/44419690', 3, '');
+
+INSERT INTO Prices (url_id, price)
+VALUES (1, 2.91)
+INSERT INTO Prices (url_id, price)
+VALUES (2, 3.59)
+INSERT INTO Prices (url_id, price)
+VALUES (3, 2.66)
+
+INSERT INTO Prices (url_id, price)
+VALUES (4, 0.99)
+INSERT INTO Prices (url_id, price)
+VALUES (5, 1.67)
+INSERT INTO Prices (url_id, price)
+VALUES (6, 1.48)
+
+INSERT INTO Prices (url_id, price)
+VALUES (7, 2.19)
+INSERT INTO Prices (url_id, price)
+VALUES (8, 2.50)
+INSERT INTO Prices (url_id, price)
+VALUES (9, 2.58)
