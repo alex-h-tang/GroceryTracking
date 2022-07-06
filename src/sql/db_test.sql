@@ -18,5 +18,6 @@ DELETE FROM ProductURLS WHERE url_id > 12;
 select * from vUrlDetails where product_id=4001
 
 select * from Prices
+select * from Accounts
 
 --drop table Prices

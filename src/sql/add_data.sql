@@ -87,3 +87,9 @@ INSERT INTO Prices (url_id, price)
 VALUES (8, 2.50)
 INSERT INTO Prices (url_id, price)
 VALUES (9, 2.58)
+
+INSERT INTO Accounts (username, password, email, is_admin)
+VALUES ('test', 'pass','yes', 0)
+
+INSERT INTO Accounts (username, password, email, is_admin)
+VALUES ('admin', 'pass','email@email.com', 1)

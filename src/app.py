@@ -1,9 +1,31 @@
 import sqlite3
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, Response
 from werkzeug.exceptions import abort
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hwqweh82q9r854jadsnvOsfasrga0956ADST4CS'
+
+login_manager = LoginManager(app)
+login_manager.login_view = "login"
+
+class User(UserMixin):
+    def __init__(self, username, email, password, admin, active=True):
+         self.id = username
+         self.email = email
+         self.password = password
+         self.admin = admin
+         self.active = active
+    def is_active(self):
+         return self.active
+    def is_anonymous(self):
+         return False
+    def is_authenticated(self):
+        return True
+    def is_admin(self):
+         return self.admin
+    def get_username(self):
+         return self.id
 
 @app.route('/')
 def index():
@@ -31,16 +53,54 @@ def product(product_id):
 @app.route('/update/<int:product_id>/<int:url_id>', methods=('GET', 'POST'))
 def update(url_id, product_id):
     new_price = -99999999
+    if not current_user.is_authenticated:
+        flash("no user currently logged in")
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        flash("only admins can update price")
+        return redirect(url_for('index'))
     if request.method == 'POST':
         new_price = request.form['new_price']
 
         if not new_price:
             flash("new price is required")
         else:
-            print(new_price)
             update_price(url_id, new_price)
             return redirect(url_for('product', product_id=product_id))
     return render_template('edit.html')
+
+@login_manager.user_loader
+def load_user(username):
+   conn = get_db_connection()
+   curs = conn.cursor()
+   curs.execute("SELECT * from Accounts where username = (?)", [username])
+   lu = curs.fetchone()
+   if lu is None:
+      return None
+   else:
+      return User(lu[0], lu[1], lu[2], int(lu[3]))
+
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    conn = get_db_connection()
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        remember = True if request.form.get('remember') else False
+
+        if not username or not password:
+            flash("password/username is required")
+
+        else:
+            check = conn.execute('SELECT * FROM Accounts WHERE username = ? and password = ?', (username, password,)).fetchone()
+            if not check:
+                flash("wrong username/password")
+            else:
+                user = list(check)
+                Us = load_user(user[0])
+                login_user(Us, remember=remember)
+                return redirect(url_for('index'))
+    return render_template('login.html')
 
 def get_db_connection():
     conn = sqlite3.connect('database.db', timeout=10)
@@ -104,6 +164,36 @@ def update_price(url_id, price):
     conn.close()
     return
 
+@app.route('/signup', methods=('GET', 'POST'))
+def sign_up():
+    conn = get_db_connection()
+    if request.method == 'POST':
+        email = request.form.get('email')
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if not email or not password or not username:
+            flash("email/password/username is required")
+        else:
+            row = conn.execute('SELECT * FROM Accounts WHERE username = ?', (username,)).fetchone()
+            if not row:
+                conn.execute('INSERT INTO Accounts (username, password, email) VALUES (?, ?, ?)', (username, password,
+                                                                                                   email))
+                conn.commit()
+                conn.close()
+                return redirect(url_for('login'))
+            else:
+                flash("username already exists")
+    return render_template('create.html')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@login_manager.unauthorized_handler
+def unauthorized_handler():
+    return 'Unauthorized', 401
 
 # @app.route('/create', methods=('GET', 'POST'))
 # def create():
